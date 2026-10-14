@@ -21,3 +21,13 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# build output
+/dist
+.vite
+
+# next.js
+/.next
+/out
+/dist
+.vite

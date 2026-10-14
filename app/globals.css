@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+/* ───────────────────────────────────────────────
+   Design tokens
+   ─────────────────────────────────────────────── */
+@theme {
+  --color-ink: #0a0a0f;
+  --color-ink-soft: #14141c;
+  --color-paper: #f6f6f8;
+
+  --color-neon-violet: #a855f7;
+  --color-neon-magenta: #ec4899;
+  --color-neon-amber: #fb923c;
+  --color-neon-cyan: #22d3ee;
+  --color-neon-indigo: #6366f1;
+
+  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --animate-marquee: marquee 38s linear infinite;
+  --animate-drift: drift 22s ease-in-out infinite;
+  --animate-drift-slow: drift 34s ease-in-out infinite reverse;
+  --animate-shimmer: shimmer 6s ease-in-out infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-8deg) scaleY(1); }
+  50%      { transform: translate3d(4%, -6%, 0) rotate(-5deg) scaleY(1.15); }
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.55; }
+  50%      { opacity: 1; }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ───────────────────────────────────────────────
+   Base
+   ─────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-neon-violet);
+  color: #fff;
+}
+
+/* Visible, on-brand focus ring everywhere */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-neon-violet);
+  outline-offset: 3px;
+  border-radius: 9999px;
+}
+
+/* ───────────────────────────────────────────────
+   Utilities
+   ─────────────────────────────────────────────── */
+
+/* Scroll-reveal: elements start hidden, .is-visible is set by the observer.
+   If JS never runs, the no-js fallback below keeps content visible. */
+@utility reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Gradient text that stays readable at display sizes */
+@utility text-gradient {
+  background-image: linear-gradient(
+    100deg,
+    #c4b5fd 0%,
+    #e879f9 28%,
+    #fda4af 55%,
+    #fdba74 80%,
+    #fde68a 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* 1px gradient border via two stacked backgrounds */
+@utility border-gradient {
+  border: 1px solid transparent;
+  background-image:
+    linear-gradient(var(--tw-gradient-surface, rgba(10, 10, 15, 0.6)), var(--tw-gradient-surface, rgba(10, 10, 15, 0.6))),
+    linear-gradient(120deg, #a855f7, #ec4899, #fb923c);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+
+/* ───────────────────────────────────────────────
+   Print — used by /resume to produce the PDF
+   ─────────────────────────────────────────────── */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  /* Keep the bar fills and rules visible in print */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

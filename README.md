@@ -1,70 +1,82 @@
-# Getting Started with Create React App
+# Joun Abbas — Portfolio
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A developer portfolio built with **Next.js 16** (App Router), **React 19** and **Tailwind CSS v4**.
 
-## Available Scripts
+## Getting started
 
-In the project directory, you can run:
+```bash
+npm install
+npm run dev      # http://localhost:3000
+```
 
-### `npm start`
+| Script          | Does                                |
+| --------------- | ----------------------------------- |
+| `npm run dev`   | Dev server with hot reload          |
+| `npm run build` | Production build (static prerender) |
+| `npm start`     | Serve the production build          |
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Routes
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+| Route     | What it is                                                  |
+| --------- | ----------------------------------------------------------- |
+| `/`       | The portfolio — hero, about, work, capabilities, experience, contact |
+| `/resume` | Print-optimised résumé/CV, generated from config             |
 
-### `npm test`
+## Making it yours
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**All copy lives in [`config/site.js`](config/site.js)** — name, role, email, WhatsApp number,
+socials, work, skill groups, services, stats, experience, education, languages and reference. Edit that one
+file and both pages update; no component changes needed.
 
-### `npm run build`
+### CV / Résumé downloads
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The PDFs live in `public/` and are declared in the `documents` array in `config/site.js`:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+public/Joun-Abbas-CV.pdf
+public/Joun-Abbas-Resume.pdf
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Replace a file (same name) and the download buttons pick it up. If a declared file is
+missing, that button falls back to `/resume` — a print-optimised page built from the same
+data — so it is never a dead link.
 
-### `npm run eject`
+> Detection runs at build time — rebuild after replacing a file.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Adding your photo
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Drop `portrait.png` (or `.jpg` / `.webp` / `.avif`) into `public/`. The hero composites it
+with the neon treatment automatically; until then a designed placeholder renders.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### WhatsApp
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Set `whatsapp` (digits only, no `+` or spaces) and `whatsappDisplay` in `config/site.js`.
+The greeting sent with the link is `whatsappMessage`.
 
-## Learn More
+### Design tokens
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Colours, fonts and animation timings live in the `@theme` block at the top of
+[`app/globals.css`](app/globals.css). The hero's light composition is pure CSS/SVG in
+[`components/NeonBackdrop.js`](components/NeonBackdrop.js) — adjust the streak gradients
+there to re-tint the whole hero.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Structure
 
-### Code Splitting
+```
+app/
+  layout.js        fonts, metadata, skip link
+  page.js          section composition
+  globals.css      tokens, utilities, print + reduced-motion rules
+  resume/page.js   printable CV
+components/        Nav, Hero, NeonBackdrop, About, Projects, Skills,
+                   Experience, Contact, Footer, DocumentLinks, Reveal…
+config/site.js     ← all content
+lib/               documents.js (PDF detection), whatsapp.js (deep link)
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Notes
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Fully responsive, with a mobile nav sheet and a nav that pins on scroll.
+- Respects `prefers-reduced-motion`: animations and scroll-reveal are neutralised.
+- Keyboard accessible — skip link, visible focus rings, `aria-current` on the active nav item.
+# Portfolio
