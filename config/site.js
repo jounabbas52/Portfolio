@@ -65,44 +65,34 @@ export const about = {
   ],
 };
 
-// What you do, drawn from the CV responsibilities.
-// ── Swap these for named client projects as you ship them. ──
+// Live, deployed systems — each href opens the running app.
 export const projects = [
   {
-    title: 'Responsive Websites',
+    title: 'Office Management System',
     description:
-      'Sites built with HTML5, CSS3, JavaScript and Next.js, made to hold up across phone, tablet and desktop screens.',
-    tags: ['Next.js', 'JavaScript', 'HTML5', 'CSS3'],
-    year: 'Ongoing',
+      'A workspace for running an office end to end — staff records, task assignment and day-to-day operations behind a single authenticated dashboard.',
+    tags: ['Next.js', 'JavaScript', 'Supabase', 'Dashboard'],
+    year: '2025',
     accent: ['#60a5fa', '#a855f7'],
-    href: '#contact',
+    href: 'https://office-management-system-mu.vercel.app/login',
   },
   {
-    title: 'Android Applications',
+    title: 'School Operating System',
     description:
-      'Android apps built with Flutter and Dart — from screen layout through to data and release.',
-    tags: ['Flutter', 'Dart', 'Android'],
-    year: 'Ongoing',
-    accent: ['#38bdf8', '#6366f1'],
-    href: '#contact',
-  },
-  {
-    title: 'Database-Driven Features',
-    description:
-      'Schema design and queries in SQL, MySQL and Supabase, wired into the application features that depend on them.',
-    tags: ['SQL', 'MySQL', 'Supabase', 'PHP'],
-    year: 'Ongoing',
+      'School administration in one place — students, classes, staff and records, with role-based access for the people who need each part.',
+    tags: ['Next.js', 'SQL', 'Role-based access'],
+    year: '2025',
     accent: ['#34d399', '#14b8a6'],
-    href: '#contact',
+    href: 'https://school-operating-system-theta.vercel.app/login',
   },
   {
-    title: 'Performance & Reliability',
+    title: 'Clinic Management System',
     description:
-      'Faster loads, fewer wasted queries, and day-to-day reliability of what ships — with Git across the delivery cycle.',
-    tags: ['Performance', 'Git', 'Version control'],
-    year: 'Ongoing',
-    accent: ['#fb923c', '#ec4899'],
-    href: '#contact',
+      'Clinic software covering patients, appointments and visit history — built so front-desk staff can move through a busy day without fighting the UI.',
+    tags: ['Next.js', 'MySQL', 'Appointments'],
+    year: '2025',
+    accent: ['#38bdf8', '#6366f1'],
+    href: 'https://clinic-management-system-software-s.vercel.app/login',
   },
 ];
 

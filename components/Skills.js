@@ -47,13 +47,16 @@ export default function Skills() {
               Technical skills
             </h3>
 
-            <dl className="mt-8 grid gap-x-14 gap-y-9 md:grid-cols-2">
+            {/* items-start throughout: without it, a row whose chips wrap to two
+                lines stretches its grid neighbour, and rounded-full turns the
+                stretched chips into ovals. */}
+            <dl className="mt-8 grid items-start gap-x-14 gap-y-9 md:grid-cols-2">
               {skillGroups.map((row, i) => (
-                <Reveal key={row.group} delay={i * 70} className="sm:flex sm:gap-8">
+                <Reveal key={row.group} delay={i * 70} className="sm:flex sm:items-start sm:gap-8">
                   <dt className="w-32 shrink-0 font-display text-base font-semibold text-white/85">
                     {row.group}
                   </dt>
-                  <dd className="mt-3 flex flex-wrap gap-2 sm:mt-0">
+                  <dd className="mt-3 flex flex-wrap items-start gap-2 sm:mt-0">
                     {row.items.map((item) => (
                       <span
                         key={item}

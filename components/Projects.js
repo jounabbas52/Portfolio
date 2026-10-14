@@ -15,7 +15,8 @@ export default function Projects() {
             </h2>
           </div>
           <p className="max-w-sm text-ink/55">
-            A few builds that show the range — data-heavy dashboards, commerce, mobile and on-chain.
+            Live management systems, each running in production — office operations, school
+            administration and clinic workflows.
           </p>
         </Reveal>
 
@@ -24,6 +25,8 @@ export default function Projects() {
             <Reveal key={project.title} delay={i * 90}>
               <a
                 href={project.href}
+                target={project.href.startsWith('http') ? '_blank' : undefined}
+                rel={project.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                 className="group relative block h-full overflow-hidden rounded-[1.75rem] border border-ink/10 bg-white p-7 transition-all duration-500 hover:-translate-y-1.5 hover:border-transparent hover:shadow-[0_30px_60px_-30px_rgba(10,10,15,0.35)]"
               >
                 {/* Gradient key art */}
