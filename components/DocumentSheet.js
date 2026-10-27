@@ -4,6 +4,7 @@ import { site, socials, documentVariants } from '@/config/site';
 import PrintButton from '@/components/PrintButton';
 import DocumentLinks from '@/components/DocumentLinks';
 import SectionLabel from '@/components/SectionLabel';
+import Reveal from '@/components/Reveal';
 import { whatsappLink } from '@/lib/whatsapp';
 
 /**
@@ -47,13 +48,13 @@ export default function DocumentSheet({ variant }) {
 
       {/* Screen-only title band. The switch makes it obvious that two
           different documents exist, and which one you are reading. */}
-      <div className="mb-6 print:hidden">
+      <Reveal className="mb-6 print:hidden">
         <SectionLabel>{doc.kind}</SectionLabel>
         <p className="mt-3.5 max-w-xl text-sm leading-relaxed text-white/55 sm:text-lg">
           {doc.blurb}
         </p>
         <DocumentSwitch current={doc.key} />
-      </div>
+      </Reveal>
 
       <article className="print-sheet glass relative overflow-hidden rounded-3xl p-5 shadow-[0_50px_120px_-45px_rgba(0,0,0,0.9)] sm:rounded-[1.75rem] sm:p-10 print:rounded-none print:bg-none print:p-0 print:shadow-none print:backdrop-blur-none">
         {/* Gradient edge along the top of the sheet */}
@@ -272,7 +273,7 @@ function DocumentSwitch({ current }) {
 
 function Section({ title, children }) {
   return (
-    <section className="mt-9 break-inside-avoid">
+    <Reveal as="section" className="mt-9 break-inside-avoid">
       <h2 className="text-mono-label mb-4 flex items-center gap-2.5 text-white/40">
         <span
           aria-hidden
@@ -281,6 +282,6 @@ function Section({ title, children }) {
         {title}
       </h2>
       {children}
-    </section>
+    </Reveal>
   );
 }
