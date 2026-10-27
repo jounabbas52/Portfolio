@@ -1,120 +1,376 @@
 @import "tailwindcss";
 
-/* ───────────────────────────────────────────────
-   Design tokens
-   ─────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN TOKENS
+   One dark canvas for the whole site. Every surface is a tinted
+   glass panel over the same aurora, so no section reads as a
+   different website.
+   ═══════════════════════════════════════════════════════════════ */
 @theme {
-  --color-ink: #0a0a0f;
-  --color-ink-soft: #14141c;
-  --color-paper: #f6f6f8;
+  /* Canvas */
+  --color-void: #06070f;
+  --color-panel: #0b0d1a;
+  --color-mist: #e9eaf6;
 
-  --color-neon-violet: #a855f7;
-  --color-neon-magenta: #ec4899;
-  --color-neon-amber: #fb923c;
-  --color-neon-cyan: #22d3ee;
-  --color-neon-indigo: #6366f1;
+  /* Print sheet (used by /resume in print only) */
+  --color-ink: #0a0a0f;
+  --color-paper: #ffffff;
+
+  /* ── Accents ──────────────────────────────────────────────
+     Six hues, one per PURPOSE. Colour here carries meaning:
+     you can tell which part of the site you are in with the
+     text blurred out. What keeps it from being a rainbow is
+     that every hue is pinned to the same saturation and
+     lightness band, and every one sits on the same canvas,
+     grain and glass. Hue varies; craft does not.
+
+       indigo   identity   — the brand, the hero, documents
+       amber    human      — about, experience, the story
+       cyan     product    — shipped work, live systems
+       emerald  capability — skills, services, process
+       rose     action     — contact, the ask
+       mint     status     — availability only, never decoration
+     ───────────────────────────────────────────────────────── */
+  --color-indigo: #6366f1;
+  --color-amber: #f59e0b;
+  --color-cyan: #22d3ee;
+  --color-emerald: #10b981;
+  --color-rose: #f43f5e;
+  --color-violet: #8b5cf6;
+  --color-mint: #34d399;
+
+  /* Indigo tints, for text and hairlines on the dark canvas */
+  --color-indigo-100: #e0e7ff;
+  --color-indigo-200: #c7d2fe;
+  --color-indigo-300: #a5b4fc;
+  --color-indigo-400: #818cf8;
 
   --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-  --animate-marquee: marquee 38s linear infinite;
-  --animate-drift: drift 22s ease-in-out infinite;
-  --animate-drift-slow: drift 34s ease-in-out infinite reverse;
-  --animate-shimmer: shimmer 6s ease-in-out infinite;
+  --animate-marquee: marquee 42s linear infinite;
+  --animate-drift: drift 24s ease-in-out infinite;
+  --animate-drift-slow: drift 38s ease-in-out infinite reverse;
+  --animate-shimmer: shimmer 7s ease-in-out infinite;
+  --animate-float: float 9s ease-in-out infinite;
+  --animate-orbit: orbit 26s linear infinite;
+  --animate-signal: signal 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Registered custom properties — these are what let a gradient ANGLE and a
+   gradient STOP animate at all. Un-registered vars cannot be interpolated. */
+@property --angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   KEYFRAMES
+   ═══════════════════════════════════════════════════════════════ */
 @keyframes marquee {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
 
 @keyframes drift {
-  0%, 100% { transform: translate3d(0, 0, 0) rotate(-8deg) scaleY(1); }
-  50%      { transform: translate3d(4%, -6%, 0) rotate(-5deg) scaleY(1.15); }
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-8deg) scale(1); }
+  50%      { transform: translate3d(4%, -6%, 0) rotate(-4deg) scale(1.12); }
 }
 
 @keyframes shimmer {
-  0%, 100% { opacity: 0.55; }
+  0%, 100% { opacity: 0.5; }
   50%      { opacity: 1; }
 }
 
-@keyframes rise {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
 }
 
-/* ───────────────────────────────────────────────
-   Base
-   ─────────────────────────────────────────────── */
+@keyframes spin-angle {
+  to { --angle: 360deg; }
+}
+
+@keyframes orbit {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes rise-blur {
+  from { opacity: 0; transform: translateY(32px); filter: blur(10px); }
+  to   { opacity: 1; transform: none; filter: blur(0); }
+}
+
+@keyframes sweep {
+  from { background-position: 0% 50%; }
+  to   { background-position: 200% 50%; }
+}
+
+@keyframes grow-x {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@keyframes grow-y {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+@keyframes sd-lift {
+  from { transform: translateY(34px); }
+  to   { transform: translateY(-34px); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BASE
+   ═══════════════════════════════════════════════════════════════ */
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 6rem;
+  scroll-padding-top: 6.5rem;
+  color-scheme: dark;
 }
 
 body {
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background: var(--color-void);
+  color: var(--color-mist);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+h1, h2, h3, h4 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
 }
 
 ::selection {
-  background: var(--color-neon-violet);
+  background: var(--color-violet);
   color: #fff;
 }
 
-/* Visible, on-brand focus ring everywhere */
+/* Thin, on-brand scrollbar — part of the finish on a dark site */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--color-violet) 55%, transparent) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--color-void);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(#8b5cf6, #6366f1);
+  border-radius: 9999px;
+  border: 3px solid var(--color-void);
+}
+
 :where(a, button, [tabindex]):focus-visible {
-  outline: 2px solid var(--color-neon-violet);
+  outline: 2px solid var(--color-violet);
   outline-offset: 3px;
   border-radius: 9999px;
 }
 
-/* ───────────────────────────────────────────────
-   Utilities
-   ─────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   SURFACES
+   ═══════════════════════════════════════════════════════════════ */
 
-/* Scroll-reveal: elements start hidden, .is-visible is set by the observer.
-   If JS never runs, the no-js fallback below keeps content visible. */
+/* The standard glass panel. */
+@utility glass {
+  /* A faint vertical lift inside the panel, so it catches light from above
+     instead of sitting as a flat translucent rectangle. */
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, white 5%, transparent) 0%,
+      transparent 42%
+    ),
+    color-mix(in oklab, var(--color-panel) 62%, transparent);
+  border: 1px solid color-mix(in oklab, white 8%, transparent);
+  backdrop-filter: blur(20px) saturate(1.25);
+  -webkit-backdrop-filter: blur(20px) saturate(1.25);
+  /* Two shadows doing different jobs: a 1px inset highlight along the top
+     edge (the thing that reads as "real glass"), and a deep ambient drop so
+     the panel separates from the canvas without a heavy border. */
+  box-shadow:
+    inset 0 1px 0 0 color-mix(in oklab, white 10%, transparent),
+    0 24px 60px -30px rgba(0, 0, 0, 0.9);
+}
+
+/* A rotating conic-gradient hairline border. The ::before carries the spin,
+   and a mask punches the middle out so only the 1px edge shows. */
+@utility ring-conic {
+  position: relative;
+  isolation: isolate;
+}
+
+.ring-conic::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--angle),
+    transparent 0deg,
+    #8b5cf6 55deg,
+    #6366f1 115deg,
+    #22d3ee 165deg,
+    transparent 230deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: spin-angle 6s linear infinite;
+  z-index: -1;
+}
+
+/* Pointer-tracked spotlight. SpotlightCard writes --mx / --my on move. */
+@utility spotlight {
+  position: relative;
+}
+
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  background: radial-gradient(
+    320px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in oklab, var(--color-indigo) 20%, transparent),
+    transparent 65%
+  );
+  pointer-events: none;
+}
+
+.spotlight:hover::after,
+.spotlight:focus-within::after {
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TYPE
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Gradient text that slowly sweeps — the headline heartbeat. */
+@utility text-gradient {
+  background-image: linear-gradient(
+    100deg,
+    #ffffff 0%,
+    #e0e7ff 14%,
+    #a5b4fc 32%,
+    #818cf8 48%,
+    #a5b4fc 64%,
+    #67e8f9 78%,
+    #ffffff 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: sweep 9s linear infinite;
+}
+
+@utility text-mono-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLL REVEAL
+   JS IntersectionObserver sets .is-visible (works everywhere).
+   ═══════════════════════════════════════════════════════════════ */
 @utility reveal {
   opacity: 0;
   transform: translateY(28px);
-  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-              transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  filter: blur(6px);
+  transition:
+    opacity 0.9s var(--ease-out-expo),
+    transform 0.9s var(--ease-out-expo),
+    filter 0.9s var(--ease-out-expo);
 }
 
 .reveal.is-visible {
   opacity: 1;
   transform: none;
+  filter: blur(0);
 }
 
-/* Gradient text that stays readable at display sizes */
-@utility text-gradient {
-  background-image: linear-gradient(
-    100deg,
-    #c4b5fd 0%,
-    #e879f9 28%,
-    #fda4af 55%,
-    #fdba74 80%,
-    #fde68a 100%
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
+/* Masked edges for marquees so items fade instead of clipping. */
+@utility mask-edges {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
 
-/* 1px gradient border via two stacked backgrounds */
-@utility border-gradient {
-  border: 1px solid transparent;
-  background-image:
-    linear-gradient(var(--tw-gradient-surface, rgba(10, 10, 15, 0.6)), var(--tw-gradient-surface, rgba(10, 10, 15, 0.6))),
-    linear-gradient(120deg, #a855f7, #ec4899, #fb923c);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
+/* ═══════════════════════════════════════════════════════════════
+   SCROLL-DRIVEN ANIMATIONS (CSS only — no scroll listener, no JS)
+   Progressive enhancement: hidden entirely where unsupported.
+   ═══════════════════════════════════════════════════════════════ */
+.sd-only {
+  display: none;
 }
 
+@supports (animation-timeline: scroll()) {
+  .sd-only {
+    display: block;
+  }
+
+  /* Reading-progress bar across the top of the viewport. */
+  .scroll-progress {
+    transform-origin: 0 50%;
+    animation: grow-x linear forwards;
+    animation-timeline: scroll(root block);
+  }
+
+  /* Experience rail fills as the list passes through the viewport. */
+  .rail-fill {
+    transform-origin: 50% 0;
+    animation: grow-y linear forwards;
+    animation-timeline: view(block);
+    animation-range: entry 15% cover 60%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* Section headings drift slightly against the page scroll. */
+    .sd-parallax {
+      animation: sd-lift linear both;
+      animation-timeline: view(block);
+      animation-range: entry 0% exit 100%;
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   REDUCED MOTION
+   ═══════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {
@@ -122,12 +378,21 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
-  .reveal { opacity: 1; transform: none; }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  .text-gradient {
+    animation: none;
+  }
 }
 
-/* ───────────────────────────────────────────────
-   Print — used by /resume to produce the PDF
-   ─────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   PRINT — /resume becomes a clean white sheet
+   ═══════════════════════════════════════════════════════════════ */
 @media print {
   @page {
     margin: 14mm;
@@ -136,9 +401,9 @@ body {
   html,
   body {
     background: #fff !important;
+    color: #0a0a0f !important;
   }
 
-  /* Keep the bar fills and rules visible in print */
   * {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -152,5 +417,155 @@ body {
   .reveal {
     opacity: 1 !important;
     transform: none !important;
+    filter: none !important;
   }
+
+  .glass,
+  .spotlight::after,
+  .ring-conic::before {
+    background: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    animation: none !important;
+  }
+
+  /* The résumé is authored for the dark canvas, so every colour in it is a
+     light one. On paper that would print white-on-white — this flips the
+     whole sheet back to ink in one rule, rather than hanging a `print:`
+     variant off every single node. */
+  .print-sheet,
+  .print-sheet * {
+    color: #0a0a0f !important;
+    border-color: rgba(10, 10, 15, 0.18) !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* …except the accent marks, which carry a background rather than a colour
+     and should stay in colour on the printed page. */
+  .print-sheet .print-accent {
+    background-image: linear-gradient(110deg, #8b5cf6, #6366f1) !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   THE REACTIVE CANVAS
+   The backdrop's colour is a function of scroll position, so each
+   section bathes the whole page in its own accent and the change
+   between them is a dissolve rather than a step.
+
+   Two things make this work:
+
+   1. The colour channels are REGISTERED custom properties. An
+      unregistered custom property is an opaque string to the
+      engine — it would snap between keyframes instead of
+      interpolating. Registering them as <number> is what buys
+      the smooth transition.
+
+   2. The timeline is the document scroll itself, not a duration.
+      There is no scroll listener, no requestAnimationFrame, no
+      JS of any kind. The compositor drives it, so it stays at
+      frame rate while the main thread is busy.
+
+   Interpolation happens in RGB on purpose. Going through hue
+   would sweep the colour wheel between, say, indigo and amber
+   and smear every hue in between across the screen.
+   ═══════════════════════════════════════════════════════════════ */
+
+@property --acc-r { syntax: "<number>"; inherits: true; initial-value: 99; }
+@property --acc-g { syntax: "<number>"; inherits: true; initial-value: 102; }
+@property --acc-b { syntax: "<number>"; inherits: true; initial-value: 241; }
+
+@keyframes canvas-drift {
+  /* Stops track the section order in app/page.js. Re-tune when you add or
+     reorder a section — they are percentages of total document scroll. */
+  0%, 8% { --acc-r: 99;  --acc-g: 102; --acc-b: 241; } /* hero        indigo  */
+  18%    { --acc-r: 245; --acc-g: 158; --acc-b: 11;  } /* about       amber   */
+  30%    { --acc-r: 34;  --acc-g: 211; --acc-b: 238; } /* work        cyan    */
+  44%    { --acc-r: 34;  --acc-g: 211; --acc-b: 238; } /* case study  cyan    */
+  56%    { --acc-r: 16;  --acc-g: 185; --acc-b: 129; } /* skills      emerald */
+  67%    { --acc-r: 139; --acc-g: 92;  --acc-b: 246; } /* experience  violet  */
+  78%    { --acc-r: 16;  --acc-g: 185; --acc-b: 129; } /* process     emerald */
+  89%    { --acc-r: 245; --acc-g: 158; --acc-b: 11;  } /* estimate    amber   */
+  100%   { --acc-r: 244; --acc-g: 63;  --acc-b: 94;  } /* contact     rose    */
+}
+
+/* Where it is unsupported (Firefox today) the channels simply keep their
+   registered initial values and the canvas stays indigo — the page is
+   never broken by its absence, only quieter. */
+@supports (animation-timeline: scroll()) {
+  html {
+    animation: canvas-drift linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+
+/* The live accent, for anything that should follow the canvas. */
+@utility accent-live {
+  color: rgb(var(--acc-r) var(--acc-g) var(--acc-b));
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION ACCENTS
+   Each section declares what it is ABOUT, and its children read
+   --accent rather than naming a colour. Swapping a section's
+   meaning is then a one-class change, not a find-and-replace.
+   ═══════════════════════════════════════════════════════════════ */
+.acc-indigo  { --accent: #6366f1; --accent-rgb: 99 102 241; }
+.acc-amber   { --accent: #f59e0b; --accent-rgb: 245 158 11; }
+.acc-cyan    { --accent: #22d3ee; --accent-rgb: 34 211 238; }
+.acc-emerald { --accent: #10b981; --accent-rgb: 16 185 129; }
+.acc-violet  { --accent: #8b5cf6; --accent-rgb: 139 92 246; }
+.acc-rose    { --accent: #f43f5e; --accent-rgb: 244 63 94; }
+
+/* ═══════════════════════════════════════════════════════════════
+   SIGNAL
+   Replaces Tailwind's `animate-ping`, which is on roughly every
+   third site on the web and expands linearly. This has a sharp
+   attack and a long decay, so it reads as a transmission rather
+   than a throb.
+   ═══════════════════════════════════════════════════════════════ */
+@keyframes signal {
+  0%   { transform: scale(0.55); opacity: 0.85; }
+  14%  { transform: scale(1.05); opacity: 0.5; }
+  70%  { transform: scale(2.6);  opacity: 0; }
+  100% { transform: scale(2.6);  opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLL-DRAWN RAIL  (Process section)
+   The fill's scaleY is literally the element's progress through
+   the viewport. Not a transition fired by an observer — a value
+   bound to scroll offset, so dragging the scrollbar backwards
+   un-draws it. Unsupported browsers get a fully drawn rail.
+   ═══════════════════════════════════════════════════════════════ */
+.process-rail {
+  transform: scaleY(1);
+}
+
+@supports (animation-timeline: view()) {
+  @keyframes draw-rail {
+    from { transform: scaleY(0); }
+    to   { transform: scaleY(1); }
+  }
+
+  .process-rail {
+    transform: scaleY(0);
+    animation: draw-rail linear both;
+    animation-timeline: view();
+    /* Start when the rail's top reaches 85% down the viewport, finish once
+       its bottom has risen to 55% — so it completes as you read, not after. */
+    animation-range: entry 15% cover 55%;
+  }
+}
+
+/* A cart line arriving. Keyed remount replays it; see Estimator.js. */
+@keyframes cart-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.cart-line {
+  animation: cart-in 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
 }

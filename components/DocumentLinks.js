@@ -4,37 +4,35 @@ import { getDocuments } from '@/lib/documents';
 /**
  * CV / Résumé download buttons.
  *
- * `tone="dark"` for placement on the dark hero and contact panels,
- * `tone="light"` for the paper-coloured sections.
+ * Sized for the phone first. At full size "Download CV" and "Download Résumé"
+ * together are wider than a 390px screen, so each button drops to its short
+ * label and tighter padding below `sm` — three actions then sit on one row
+ * instead of stacking into a wall of pills.
  */
-export default function DocumentLinks({ tone = 'dark', className = '', ...rest }) {
+export default function DocumentLinks({ className = '', ...rest }) {
   const documents = getDocuments();
 
-  const base =
-    'group inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-sm font-medium transition-all duration-300';
-
-  const styles =
-    tone === 'dark'
-      ? 'border border-white/20 bg-white/[0.06] text-white backdrop-blur-xl hover:bg-white/15'
-      : 'border border-ink/15 bg-white text-ink hover:border-ink/35 hover:shadow-[0_18px_40px_-24px_rgba(10,10,15,0.5)]';
-
   return (
-    <div className={`flex flex-wrap items-center gap-3 ${className}`} {...rest}>
+    <div className={`flex flex-wrap items-center gap-2 sm:gap-3 ${className}`} {...rest}>
       {documents.map((doc) => (
         <a
           key={doc.key}
           href={doc.href}
           {...(doc.isFile
             ? { download: doc.filename }
-            : { 'aria-label': `${doc.label} — opens the printable résumé page` })}
-          className={`${base} ${styles}`}
+            : { 'aria-label': `${doc.label} — opens the printable page instead` })}
+          className="group inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.05] px-3.5 py-2 text-xs font-medium text-white backdrop-blur-xl transition-all duration-300 hover:border-white/30 hover:bg-white/12 sm:gap-2.5 sm:px-6 sm:py-3 sm:text-sm"
         >
           {doc.isFile ? (
-            <Download size={16} className="transition-transform duration-300 group-hover:translate-y-0.5" />
+            <Download
+              size={14}
+              className="shrink-0 transition-transform duration-300 group-hover:translate-y-0.5 sm:size-4"
+            />
           ) : (
-            <FileText size={16} />
+            <FileText size={14} className="shrink-0 sm:size-4" />
           )}
-          {doc.label}
+          <span className="sm:hidden">{doc.short}</span>
+          <span className="hidden sm:inline">{doc.label}</span>
         </a>
       ))}
     </div>
